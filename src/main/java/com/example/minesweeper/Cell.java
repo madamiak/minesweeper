@@ -2,13 +2,15 @@ package com.example.minesweeper;
 
 public class Cell {
 
-    int x;
+    public int x;
 
-    int y;
+    public int y;
 
     private boolean isMine = false;
 
-    private boolean revealed = true;
+    private boolean revealed = false;
+
+    private boolean flagged = false;
 
     public Cell(int x, int y) {
         this.x = x;
@@ -17,6 +19,11 @@ public class Cell {
 
     public void mine() {
         isMine = true;
+    }
+
+    public boolean flag() {
+        flagged = !flagged;
+        return flagged;
     }
 
     public void reveal() {
@@ -34,5 +41,9 @@ public class Cell {
 
     public boolean isMine() {
         return isMine;
+    }
+
+    public boolean isFlagged() {
+        return flagged;
     }
 }

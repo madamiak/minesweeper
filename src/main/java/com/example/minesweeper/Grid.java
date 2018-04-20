@@ -62,6 +62,11 @@ public class Grid {
         return grid[col][row];
     }
 
+    public boolean flag(int x, int y) {
+        Cell cell = cell(x, y);
+        return cell.flag();
+    }
+
     public int neighbors(Cell cell) {
         if (cell.isMine()) {
             return -1;
@@ -79,15 +84,19 @@ public class Grid {
         return neighbors;
     }
 
-    public void reveal(int col, int row) {
+    public boolean reveal(int col, int row) {
         Cell cell = cell(col, row);
-        if (cell.isRevealed()) {
-            return;
+        if (cell.isRevealed() || cell.isFlagged()) {
+            return false;
         }
         cell.reveal();
+        if(cell.isMine()) {
+            return true;
+        }
         if (neighbors(cell) == 0) {
             floodFill(cell);
         }
+        return false;
     }
 
     private void floodFill(Cell cell) {
@@ -96,12 +105,32 @@ public class Grid {
                 int x = cell.x + i;
                 int y = cell.y + j;
                 if (x >= 0 && x < cols && y >= 0 && y < rows) {
-                    cell = cell(x,y);
-                    if (!cell.isRevealed() && !cell.isMine()) {
+                    if (!cell(x,y).isRevealed() && !cell.isMine()) {
                         reveal(x, y);
                     }
                 }
             }
         }
+    }
+
+    public void revealAll() {
+        for (int i = 0; i < cols; i++) {
+            for (int j = 0; j < rows; j++) {
+                cell(i, j).reveal();
+            }
+        }
+    }
+
+    public int getNotRevealedCells() {
+        int notRevealedCells = 0;
+        for (int i = 0; i < cols; i++) {
+            for (int j = 0; j < rows; j++) {
+                Cell cell = cell(i, j);
+                if(!cell.isRevealed()) {
+                    notRevealedCells++;
+                }
+            }
+        }
+        return notRevealedCells;
     }
 }

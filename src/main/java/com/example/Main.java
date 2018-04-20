@@ -7,6 +7,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
@@ -20,7 +21,7 @@ public class Main extends Application {
 
     private static final int COLS = 20;
 
-    private static final int MINES = 15;
+    private static final int MINES = 2;
 
     public static void main(String[] args) {
         launch(args);
@@ -35,11 +36,19 @@ public class Main extends Application {
         Drawable javaFxCanvasDrawer = new JavaFxCanvasDrawer(gc);
         Minesweeper minesweeper = Minesweeper.create(ROWS, COLS, MINES);
         minesweeper.draw(javaFxCanvasDrawer);
-        System.out.println(minesweeper);
+        //System.out.println(minesweeper);
         canvas.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             int x = (int) (e.getX() / COLS);
             int y = (int) (e.getY() / ROWS);
-            minesweeper.reveal(x, y);
+            MouseButton button = e.getButton();
+            if (button.equals(MouseButton.PRIMARY)) {
+                minesweeper.reveal(x, y);
+            } else {
+                minesweeper.flag(x, y);
+            }
+            if(minesweeper.finished()) {
+                minesweeper.gameOver();
+            }
             minesweeper.draw(javaFxCanvasDrawer);
         });
 
