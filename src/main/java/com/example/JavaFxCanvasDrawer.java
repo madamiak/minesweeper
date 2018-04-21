@@ -11,17 +11,9 @@ public class JavaFxCanvasDrawer implements Drawable {
 
     private final GraphicsContext gc;
 
-    private Drawable.PaintColor paintColor;
-
     public JavaFxCanvasDrawer(GraphicsContext gc) {
         this.gc = gc;
     }
-
-    @Override
-    public void setPaintColor(Drawable.PaintColor paintColor) {
-        this.paintColor = paintColor;
-    }
-
 
     @Override
     public void draw(Grid grid) {
@@ -85,9 +77,5 @@ public class JavaFxCanvasDrawer implements Drawable {
         double height = gc.getCanvas().getHeight() / grid.rows;
         gc.setFill(Color.GREY);
         gc.fillOval(cell.x * width, cell.y * height, width, height);
-    }
-
-    protected Color toColor(Drawable.PaintColor paintColor) {
-        return Color.valueOf(paintColor.name());
     }
 }

@@ -12,7 +12,9 @@ public class Minesweeper {
 
     private int availableFlags;
 
-    private boolean finished = false;
+    private boolean mineRevealed = false;
+
+    private boolean won = false;
 
     public static Minesweeper create(int rows, int cols, int mines) {
         Grid grid = new Grid(rows, cols);
@@ -31,7 +33,15 @@ public class Minesweeper {
     }
 
     public void reveal(int x, int y) {
-        finished = this.grid.reveal(x, y);
+        Cell cell = this.grid.cell(x, y);
+        mineRevealed = this.grid.reveal(cell);
+    }
+
+    public void revealNeighbors(int x, int y) {
+        Cell cell = this.grid.cell(x, y);
+        if (cell.isRevealed()) {
+            mineRevealed = this.grid.revealNeighbors(cell);
+        }
     }
 
     public void flag(int x, int y) {
@@ -53,10 +63,22 @@ public class Minesweeper {
     }
 
     public boolean finished() {
-        return finished || (grid.getNotRevealedCells() == mines && availableFlags == 0);
+        return mineRevealed || win();
+    }
+
+    private boolean win() {
+        return grid.getNotRevealedCells() == mines && availableFlags == 0;
+    }
+
+
+    public boolean won() {
+        return won;
     }
 
     public void gameOver() {
+        if (win()) {
+            won = true;
+        }
         grid.revealAll();
     }
 

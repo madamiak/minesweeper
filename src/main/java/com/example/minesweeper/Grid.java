@@ -46,7 +46,7 @@ public class Grid {
         for (int i = 0; i < cols; i++) {
 
             for (int j = 0; j < rows; j++) {
-                sb.append(cell(i,j).toString());
+                sb.append(cell(i, j).toString());
                 sb.append("|");
             }
             sb.append("\n");
@@ -84,33 +84,18 @@ public class Grid {
         return neighbors;
     }
 
-    public boolean reveal(int col, int row) {
-        Cell cell = cell(col, row);
+    public boolean reveal(Cell cell) {
         if (cell.isRevealed() || cell.isFlagged()) {
             return false;
         }
         cell.reveal();
-        if(cell.isMine()) {
+        if (cell.isMine()) {
             return true;
         }
         if (neighbors(cell) == 0) {
             floodFill(cell);
         }
         return false;
-    }
-
-    private void floodFill(Cell cell) {
-        for (int i = -1; i <= 1; i++) {
-            for (int j = -1; j <= 1; j++) {
-                int x = cell.x + i;
-                int y = cell.y + j;
-                if (x >= 0 && x < cols && y >= 0 && y < rows) {
-                    if (!cell(x,y).isRevealed() && !cell.isMine()) {
-                        reveal(x, y);
-                    }
-                }
-            }
-        }
     }
 
     public void revealAll() {
@@ -121,12 +106,43 @@ public class Grid {
         }
     }
 
+    public boolean revealNeighbors(Cell cell) {
+        boolean isMineRevealed = false;
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                int x = cell.x + i;
+                int y = cell.y + j;
+                if (x >= 0 && x < cols && y >= 0 && y < rows) {
+                    System.out.println("revealing " + x + " " + y);
+                    Cell otherCell = cell(x, y);
+                    isMineRevealed |= reveal(otherCell);
+                }
+            }
+        }
+        return isMineRevealed;
+    }
+
+    private void floodFill(Cell cell) {
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                int x = cell.x + i;
+                int y = cell.y + j;
+                if (x >= 0 && x < cols && y >= 0 && y < rows) {
+                    Cell otherCell = cell(x, y);
+                    if (!otherCell.isRevealed() && !cell.isMine()) {
+                        reveal(otherCell);
+                    }
+                }
+            }
+        }
+    }
+
     public int getNotRevealedCells() {
         int notRevealedCells = 0;
         for (int i = 0; i < cols; i++) {
             for (int j = 0; j < rows; j++) {
                 Cell cell = cell(i, j);
-                if(!cell.isRevealed()) {
+                if (!cell.isRevealed()) {
                     notRevealedCells++;
                 }
             }
