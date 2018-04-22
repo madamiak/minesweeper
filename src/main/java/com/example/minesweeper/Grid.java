@@ -113,7 +113,6 @@ public class Grid {
                 int x = cell.x + i;
                 int y = cell.y + j;
                 if (x >= 0 && x < cols && y >= 0 && y < rows) {
-                    System.out.println("revealing " + x + " " + y);
                     Cell otherCell = cell(x, y);
                     isMineRevealed |= reveal(otherCell);
                 }

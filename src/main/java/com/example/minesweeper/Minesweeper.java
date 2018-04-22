@@ -55,7 +55,6 @@ public class Minesweeper {
                 this.grid.flag(x, y);
             }
         }
-        System.out.println("available mines:" + availableFlags);
     }
 
     public void draw(Drawable drawer) {
@@ -80,6 +79,10 @@ public class Minesweeper {
             won = true;
         }
         grid.revealAll();
+    }
+
+    public int flagsLeft() {
+        return availableFlags;
     }
 
     @Override
